@@ -2,11 +2,6 @@
     <div id="login" class="flex items-center">
         <div class="w-full max-w-xs mx-auto">
             <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
-                <div v-if="error.message" class="border bg-red-200 border-red-400 rounded mb-1 p-1">
-                    <span class="text-red-400">
-                        {{ error.message }}
-                    </span>
-                </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                         Email
@@ -103,11 +98,20 @@ export default {
     methods: {
         register() {
             axios.post(`${process.env.VUE_APP_BASE_API_URL}register`, this.form)
-            .then(()=> {
+            .then((response) => {
                 this.removeForm();
+                this.$swal(
+                    'Berhasil',
+                    response.data.message,
+                    'success'
+                )
             })
             .catch(error => {
-                this.error.message = error.response.data.errorMessage;
+                this.$swal(
+                    'Gagal',
+                    error.response.data.errorMessage,
+                    'error'
+                )
             });
         },
         removeError() {

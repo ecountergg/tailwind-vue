@@ -90,33 +90,52 @@ export default {
         save() {
             axios.post(`${process.env.VUE_APP_BASE_API_URL}checklist`, this.form)
             .then((response) => {
-                console.log(response);
                 this.removeForm();
                 this.getChecklists();
+                this.$swal(
+                    'Berhasil',
+                    response.data.message,
+                    'success'
+                )
             })
             .catch((error) => {
-                console.log(error);
+                this.$swal(
+                    'Gagal',
+                    `${error.data.message}`,
+                    'error'
+                )
             })
         },
         getChecklists() {
             axios.get(`${process.env.VUE_APP_BASE_API_URL}checklist`)
             .then((response) => {
-                console.log(response);
                 this.loading = false
                 this.checklists = response.data.data;
             })
             .catch((error) => {
-                console.log(error);
+                this.$swal(
+                    'Gagal',
+                    `${error.data.message}`,
+                    'error'
+                )
             })
         },
         deleteChecklist(checkId) {
             axios.delete(`${process.env.VUE_APP_BASE_API_URL}checklist/${checkId}`)
             .then((response) => {
-                console.log(response);
+                this.$swal(
+                    'Berhasil',
+                    response.data.message,
+                    'success'
+                )
                 this.getChecklists();
             })
             .catch((error) => {
-                console.log(error);
+                this.$swal(
+                    'Gagal',
+                    `${error.data.message}`,
+                    'error'
+                )
             })
         },
         removeForm() {

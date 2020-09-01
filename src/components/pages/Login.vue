@@ -82,8 +82,12 @@ export default {
                     this.$router.push("dashboard").catch(()=>{});
                 }
             })
-            .catch(error => {
-                console.log(error);
+            .catch(() => {
+                this.$swal(
+                    'Gagal',
+                    '',
+                    'error',
+                )
             });
         },
     },
