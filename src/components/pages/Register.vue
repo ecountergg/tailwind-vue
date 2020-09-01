@@ -1,7 +1,7 @@
 <template>
     <div id="login" class="flex items-center">
         <div class="w-full max-w-xs mx-auto">
-            <ValidationObserver ref="Create User" v-slot="{ handleSubmit }">
+            <ValidationObserver ref="createUser" v-slot="{ handleSubmit }">
                 <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
                     <div class="mb-4">
                         <ValidationProvider
@@ -120,24 +120,14 @@ export default {
                     min: 'Password minimal 6 karakter',
                 },
             },
-            error: {
-                message: '',
-            },
         };
-    },
-    watch: {
-        form: {
-            handler(){
-                this.removeError();
-            },
-            deep: true
-        },
     },
     methods: {
         register() {
             axios.post(`${process.env.VUE_APP_BASE_API_URL}register`, this.form)
             .then((response) => {
                 this.removeForm();
+                this.$refs['createUser'].reset()
                 this.$swal(
                     'Berhasil',
                     response.data.message,
@@ -151,9 +141,6 @@ export default {
                     'error'
                 )
             });
-        },
-        removeError() {
-            this.error.message = '';
         },
         removeForm() {
             this.form.email = '';
