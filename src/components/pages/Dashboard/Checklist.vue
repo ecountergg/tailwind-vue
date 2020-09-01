@@ -1,31 +1,44 @@
 <template>
     <div class="w-full max-w-lg">
-        <div class="flex flex-wrap -mx-3 mb-6">
-            <div class="w-full px-3 mb-6 md:mb-0">
-                <label
-                    class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                    for="grid-first-name"
+        <ValidationObserver ref="createChecklist" v-slot="{ handleSubmit }">
+            <div class="bg-white shadow-md rounded p-6 mb-4">
+                <div class="flex flex-wrap -mx-3 mb-6">
+                    <ValidationProvider
+                        v-slot="{ errors }"
+                        rules="required"
+                        name="checklistName"
+                        class="w-full"
+                        :custom-messages="validationMessage.checklistName"
+                    >
+                        <div class="w-full px-3 mb-6 md:mb-0">
+                            <label
+                                class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                for="checlistName"
+                            >
+                                Checklist
+                            </label>
+                            <input
+                                id="checlistName"
+                                v-model="form.name"
+                                type="text"
+                                class="
+                                    appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4
+                                    leading-tight focus:outline-none focus:bg-white
+                                "
+                                placeholder="Sample"
+                            >
+                            <span class="text-red-500">{{ errors[0] }}</span>
+                        </div>
+                    </ValidationProvider>
+                </div>
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    @click="handleSubmit(save)"
                 >
-                    Checklist
-                </label>
-                <input
-                    id="grid-first-name"
-                    v-model="form.name"
-                    type="text"
-                    class="
-                        appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4
-                        mb-3 leading-tight focus:outline-none focus:bg-white
-                    "
-                    placeholder="Sample"
-                >
+                    Button
+                </button>
             </div>
-        </div>
-        <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            @click="save"
-        >
-            Button
-        </button>
+        </ValidationObserver>
         <table class="table-auto">
             <thead>
                 <tr>
@@ -51,7 +64,7 @@
                         <td class="border px-4 py-2">{{ checklist.name }}</td>
                         <td class="border px-4 py-2">
                             <button
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-3"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-3 mb-2"
                                 @click="deleteChecklist(checklist.id)"
                             >
                                 Delete
@@ -81,6 +94,11 @@ export default {
             },
             checklists: [],
             loading: true,
+            validationMessage: {
+                checklistName: {
+                    required: 'Checklist harus diisi',
+                },
+            },
         };
     },
     mounted() {
@@ -91,6 +109,7 @@ export default {
             axios.post(`${process.env.VUE_APP_BASE_API_URL}checklist`, this.form)
             .then((response) => {
                 this.removeForm();
+                this.$refs['createChecklist'].reset()
                 this.getChecklists();
                 this.$swal(
                     'Berhasil',
