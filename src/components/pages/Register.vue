@@ -1,7 +1,7 @@
 <template>
     <div id="login" class="flex items-center">
         <div class="w-full max-w-xs mx-auto">
-            <ValidationObserver ref="createUser" v-slot="{ handleRegister }">
+            <ValidationObserver ref="createUser" v-slot="{ handleSubmit }">
                 <form class="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
                     <div class="mb-4">
                         <ValidationProvider
@@ -76,7 +76,7 @@
                                 focus:outline-none focus:shadow-outline
                             "
                             type="button"
-                            @click="handleRegister(register)"
+                            @click="handleSubmit(register)"
                         >
                             Register
                         </button>
