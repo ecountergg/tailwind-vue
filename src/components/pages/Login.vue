@@ -75,8 +75,10 @@ export default {
         signIn() {
             axios.post(`${process.env.VUE_APP_BASE_API_URL}login`, this.form)
             .then(response => {
-                const token = response.data.data.token;
+                const token = response.data.access_token;
                 if(token) {
+                    // axios.defaults.headers['Authorization'] = `Bearer ${token}`
+
                     this.$store.commit('SET_TOKEN', token);
                     localStorage.token = token;
                     this.$router.push("dashboard").catch(()=>{});

@@ -1,21 +1,21 @@
 <template>
     <div class="w-full max-w-lg">
-        <ValidationObserver ref="createChecklist" v-slot="{ handleSubmit }">
+        <ValidationObserver ref="createCategory" v-slot="{ handleSubmit }">
             <div class="bg-white shadow-md rounded p-6 mb-4">
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <ValidationProvider
                         v-slot="{ errors }"
                         rules="required"
-                        name="checklistName"
+                        name="categoryName"
                         class="w-full"
-                        :custom-messages="validationMessage.checklistName"
+                        :custom-messages="validationMessage.categoryName"
                     >
                         <div class="w-full px-3 mb-6 md:mb-0">
                             <label
                                 class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                 for="checlistName"
                             >
-                                Checklist
+                                Category
                             </label>
                             <input
                                 id="checlistName"
@@ -30,6 +30,22 @@
                             <span class="text-red-500">{{ errors[0] }}</span>
                         </div>
                     </ValidationProvider>
+                    <div class="w-full px-3 mb-6 md:mb-0">
+                        <label
+                            class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                            for="description"
+                        >
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            v-model="form.description"
+                            class="resize-none border rounded focus:outline-none focus:shadow-outline
+                                w-full h-32 px-4 py-3
+                            "
+                            placeholder="Description"
+                        ></textarea>
+                    </div>
                 </div>
                 <button
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -53,19 +69,19 @@
                         <td colspan="3" class="border px-4 py-2 text-center">Loading ...</td>
                     </tr>
                 </template>
-                <template v-else-if="!loading && checklists.length === 0">
+                <template v-else-if="!loading && categories.length === 0">
                     <tr>
                         <td colspan="3" class="border px-4 py-2 text-center">Tidak Ada Data</td>
                     </tr>
                 </template>
                 <template v-else>
-                    <tr v-for="(checklist, index) in checklists" :key="index">
+                    <tr v-for="(category, index) in categories" :key="index">
                         <td class="border px-4 py-2">{{ index+1 }}</td>
-                        <td class="border px-4 py-2">{{ checklist.name }}</td>
+                        <td class="border px-4 py-2">{{ category.name }}</td>
                         <td class="border px-4 py-2">
                             <button
                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-3 mb-2"
-                                @click="deleteChecklist(checklist.id)"
+                                @click="deleteCategory(category.id)"
                             >
                                 Delete
                             </button>
@@ -86,34 +102,37 @@
 import axios from 'axios'
 
 export default {
-    name: 'Checklist',
+    name: 'Category',
     data() {
         return {
             form: {
-                name,
+                name: '',
+                description: '',
             },
-            checklists: [],
+            categories: [],
             loading: true,
             validationMessage: {
-                checklistName: {
-                    required: 'Checklist harus diisi',
+                categoryName: {
+                    required: 'Kategori harus diisi',
                 },
             },
         };
     },
     mounted() {
-        this.getChecklists();
+        this.getCategories();
     },
     methods: {
         save() {
-            axios.post(`${process.env.VUE_APP_BASE_API_URL}checklist`, this.form)
-            .then((response) => {
+            axios.post(`${process.env.VUE_APP_BASE_API_URL}category`, this.form)
+            .then(() => {
                 this.removeForm();
-                this.$refs['createChecklist'].reset()
-                this.getChecklists();
+                this.getCategories();
+
+                this.$refs['createCategory'].reset()
+
                 this.$swal(
                     'Berhasil',
-                    response.data.message,
+                    'Simpan kategori berhasil',
                     'success'
                 )
             })
@@ -125,11 +144,11 @@ export default {
                 )
             })
         },
-        getChecklists() {
-            axios.get(`${process.env.VUE_APP_BASE_API_URL}checklist`)
-            .then((response) => {
+        getCategories() {
+            axios.get(`${process.env.VUE_APP_BASE_API_URL}category`)
+            .then(() => {
                 this.loading = false
-                this.checklists = response.data.data;
+                // this.categories = response.data.data;
             })
             .catch((error) => {
                 this.$swal(
@@ -139,15 +158,15 @@ export default {
                 )
             })
         },
-        deleteChecklist(checkId) {
-            axios.delete(`${process.env.VUE_APP_BASE_API_URL}checklist/${checkId}`)
+        deleteCategory(checkId) {
+            axios.delete(`${process.env.VUE_APP_BASE_API_URL}category/${checkId}`)
             .then((response) => {
                 this.$swal(
                     'Berhasil',
                     response.data.message,
                     'success'
                 )
-                this.getChecklists();
+                this.getCategories();
             })
             .catch((error) => {
                 this.$swal(
@@ -159,6 +178,7 @@ export default {
         },
         removeForm() {
             this.form.name = '';
+            this.form.description = '';
         },
     },
 }

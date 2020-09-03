@@ -1,6 +1,6 @@
 import Dashboard from '@/components/layout/Dashboard.vue';
 import Index from '@/components/pages/Dashboard/Index.vue';
-import Checklist from '@/components/pages/Dashboard/Checklist.vue';
+import Category from '@/components/pages/Dashboard/Category.vue';
 
 export default [
     {
@@ -13,9 +13,9 @@ export default [
               component: Index,
             },
             {
-              path: 'checklist',
-              name: 'checklist',
-              component: Checklist,
+              path: 'category',
+              name: 'category',
+              component: Category,
             },
           ]
     },

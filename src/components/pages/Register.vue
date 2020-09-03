@@ -47,7 +47,7 @@
                             <span class="text-red-500">{{ errors[0] }}</span>
                         </ValidationProvider>
                     </div>
-                    <div class="mb-6">
+                    <div class="mb-4">
                         <ValidationProvider
                             v-slot="{ errors }"
                             rules="required|min:6"
@@ -70,10 +70,33 @@
                             <span class="text-red-500">{{ errors[0] }}</span>
                         </ValidationProvider>
                     </div>
+                    <div class="mb-6">
+                        <ValidationProvider
+                            v-slot="{ errors }"
+                            rules="confirmed:password"
+                            name="confirm-password"
+                            :custom-messages="validationMessage.confirm_password"
+                        >
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="confirm-password">
+                                Confirm Password
+                            </label>
+                            <input
+                                id="confirm-password"
+                                v-model="form.confirm_password"
+                                type="password"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
+                                    focus:outline-none focus:shadow-outline
+                                "
+                                placeholder="******************"
+                                autocomplete="on"
+                            >
+                            <span class="text-red-500">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                    </div>
                     <div class="flex items-center justify-between">
                         <button
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded
-                                focus:outline-none focus:shadow-outline
+                                focus:outline-none focus:shadow-outline border-none
                             "
                             type="button"
                             @click="handleSubmit(register)"
@@ -106,6 +129,7 @@ export default {
                 email: '',
                 username: '',
                 password: '',
+                confirm_password: '',
             },
             validationMessage: {
                 email: {
@@ -118,6 +142,9 @@ export default {
                 password: {
                     required: 'Password harus diisi',
                     min: 'Password minimal 6 karakter',
+                },
+                confirm_password: {
+                    confirmed: 'Konfirmasi Password harus sama dengan password',
                 },
             },
         };
@@ -146,6 +173,7 @@ export default {
             this.form.email = '';
             this.form.username = '';
             this.form.password = '';
+            this.form.confirm_password = '';
         },
     },
 }
