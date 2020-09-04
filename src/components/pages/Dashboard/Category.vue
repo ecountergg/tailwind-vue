@@ -138,10 +138,10 @@ export default {
                     'success'
                 )
             })
-            .catch((error) => {
+            .catch(() => {
                 this.$swal(
                     'Gagal',
-                    `${error.data.message}`,
+                    `Terjadi kesalahan, silahkan coba lagi`,
                     'error'
                 )
             })
@@ -152,28 +152,28 @@ export default {
                 this.loading = false
                 this.categories = response.data.data;
             })
-            .catch((error) => {
+            .catch(() => {
                 this.$swal(
                     'Gagal',
-                    `${error.data.message}`,
+                    `Terjadi kesalahan, silahkan coba lagi`,
                     'error'
                 )
             })
         },
         deleteCategory(checkId) {
-            axios.delete(`${process.env.VUE_APP_BASE_API_URL}category/${checkId}`)
-            .then((response) => {
+            axios.delete(`${process.env.VUE_APP_BASE_API_URL}delete/category/${checkId}`)
+            .then(() => {
                 this.$swal(
                     'Berhasil',
-                    response.data.message,
+                    'Hapus kategori berhasil',
                     'success'
                 )
                 this.getCategories();
             })
-            .catch((error) => {
+            .catch(() => {
                 this.$swal(
                     'Gagal',
-                    `${error.data.message}`,
+                    `Terjadi kesalahan, silahkan coba lagi`,
                     'error'
                 )
             })
