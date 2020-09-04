@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import authenticationRoutes from './modules/authenticationRoutes'
 import dashboardRoutes from './modules/dashboardRoutes'
 
+import store from '@/store';
+import { getToken } from '@/utils/auth.js'
+
 Vue.use(Router)
 
 /**
@@ -47,7 +50,7 @@ Vue.use(Router)
 //   { path: '*', redirect: '/404', hidden: true },
 // ]
 
-const createRouter = () => new Router({
+const createRouter = new Router({
   // mode: 'history', // require service support
   routes: [
         ...authenticationRoutes,
@@ -56,7 +59,12 @@ const createRouter = () => new Router({
   mode: 'history'
 })
 
-const router = createRouter()
+createRouter.beforeEach((to, from, next) => {
+    const token = store.state.auth.token ? store.state.auth.token : getToken();
+
+    if (to.name !== 'login' && !token) next({ name: 'login' })
+    else next()
+})
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 // export function resetRouter() {
@@ -64,5 +72,5 @@ const router = createRouter()
 //   router.matcher = newRouter.matcher // reset router
 // }
 
-export default router;
+export default createRouter;
 
