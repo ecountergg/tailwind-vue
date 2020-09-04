@@ -59,7 +59,8 @@
             <thead>
                 <tr>
                     <th class="px-4 py-2">No</th>
-                    <th class="px-4 py-2">Title</th>
+                    <th class="px-4 py-2">Name</th>
+                    <th class="px-4 py-2">Description</th>
                     <th class="px-4 py-2">Actions</th>
                 </tr>
             </thead>
@@ -78,6 +79,7 @@
                     <tr v-for="(category, index) in categories" :key="index">
                         <td class="border px-4 py-2">{{ index+1 }}</td>
                         <td class="border px-4 py-2">{{ category.name }}</td>
+                        <td class="border px-4 py-2">{{ category.description }}</td>
                         <td class="border px-4 py-2">
                             <button
                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-3 mb-2"
@@ -146,9 +148,9 @@ export default {
         },
         getCategories() {
             axios.get(`${process.env.VUE_APP_BASE_API_URL}category`)
-            .then(() => {
+            .then((response) => {
                 this.loading = false
-                // this.categories = response.data.data;
+                this.categories = response.data.data;
             })
             .catch((error) => {
                 this.$swal(
