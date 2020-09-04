@@ -77,11 +77,9 @@ export default {
             .then(response => {
                 const token = response.data.access_token;
                 if(token) {
-                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
                     this.$store.commit('SET_TOKEN', token);
                     localStorage.token = token;
-                    this.$router.push("dashboard").catch(()=>{});
+                    this.$router.push('dashboard').catch(()=>{});
                 }
             })
             .catch(() => {
