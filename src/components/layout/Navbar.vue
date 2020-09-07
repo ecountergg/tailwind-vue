@@ -62,9 +62,10 @@ export default {
             this.$store.dispatch('toggleSidebar')
         },
         logout() {
-            localStorage.removeItem('token');
-            this.$store.commit('SET_TOKEN', '');
-            this.$router.push('/').catch(()=>{});
+            this.$store.dispatch('auth/destroyToken')
+            .then(() => {
+                this.$router.push('/');
+            })
         },
     }
 }

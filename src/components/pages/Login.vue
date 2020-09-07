@@ -58,7 +58,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 
 export default {
     name: 'Login',
@@ -73,22 +72,16 @@ export default {
     },
     methods: {
         signIn() {
-            axios.post(`${process.env.VUE_APP_BASE_API_URL}login`, this.form)
-            .then(response => {
-                const token = response.data.access_token;
-                if(token) {
-                    this.$store.commit('SET_TOKEN', token);
-                    localStorage.token = token;
-                    this.$router.push('dashboard').catch(()=>{});
-                }
+            this.$store.dispatch('auth/retrieveToken', {
+                username: this.form.username,
+                password: this.form.password,
             })
-            .catch(() => {
-                this.$swal(
-                    'Gagal',
-                    '',
-                    'error',
-                )
-            });
+                .then(() => {
+                    this.$router.push('dashboard')
+                })
+                .catch(() => {
+                    this.form.password = ''
+                })
         },
     },
 }

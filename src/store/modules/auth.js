@@ -1,24 +1,74 @@
 import { getToken } from '@/utils/auth';
+import $axiosApi from '@/utils/api.js';
 
 const state = {
     token: getToken(),
 };
 
 const getters = {
-    GET_TOKEN: state => state.token
+    GET_TOKEN: state => state.token,
+    LOGGED_IN: state => state.token !== null,
+    RETRIEVE_TOKEN: (state, token) => state.token = token,
+    DESTROY_TOKEN: (state) => state.token = null,
 };
 
-const actions = {};
+const actions = {
+    destroyToken(context) {
+      if (context.getters.loggedIn) {
+        return new Promise((resolve, reject) => {
+            $axiosApi.post(`${process.env.VUE_APP_BASE_API_URL}auth/logout`)
+            .then(response => {
+                localStorage.removeItem('token')
+                context.commit('auth/DESTROY_TOKEN', null, {
+                    root: true,
+                });
 
-const mutations = {
-    SET_TOKEN(state, token) {
-        state.token = token
+                resolve(response)
+                // console.log(response);
+                // context.commit('addTodo', response.data)
+            })
+            .catch(error => {
+                localStorage.removeItem('token')
+                context.commit('auth/DESTROY_TOKEN', null, {
+                    root: true,
+                });
+                reject(error)
+            })
+        })
+      }
+    },
+    retrieveToken(context, credentials) {
+        return new Promise((resolve, reject) => {
+            $axiosApi.post(`${process.env.VUE_APP_BASE_API_URL}auth/login`, {
+            username: credentials.username,
+            password: credentials.password,
+        })
+            .then(response => {
+                const token = response.data.access_token
+
+                localStorage.setItem('token', token)
+                context.commit('auth/RETRIEVE_TOKEN', token, {
+                    root: true,
+                });
+                resolve(response)
+            })
+            .catch(error => {
+                console.log(error)
+                reject(error)
+            })
+        })
     },
 };
 
+const mutations = {
+    RETRIEVE_TOKEN:(state, token) =>state.token = token,
+    DESTROY_TOKEN: state => state.token = null,
+};
+
 export default {
+    namespaced: true,
     state,
     getters,
-    actions,
     mutations,
+    actions,
 };

@@ -6,8 +6,8 @@ import dashboard from './modules/dashboard'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: {
-    auth,
-    dashboard,
-  }
+    modules: {
+        auth: auth,
+        dashboard: dashboard,
+    }
 });
