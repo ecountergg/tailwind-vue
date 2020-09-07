@@ -8,7 +8,7 @@ const getters = {
     GET_TOKEN: state => state.token
 };
 
-const action = {};
+const actions = {};
 
 const mutations = {
     SET_TOKEN(state, token) {
@@ -19,6 +19,6 @@ const mutations = {
 export default {
     state,
     getters,
-    action,
+    actions,
     mutations,
 };
